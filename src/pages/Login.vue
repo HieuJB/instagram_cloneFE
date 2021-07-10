@@ -4,14 +4,16 @@
         <div class="hidden lg:block w-1/2 mt-10">
             <img class="max-w-md h-4/5 float-right py-4" src="../images/phone.png">
         </div>
-        <div class="w-full lg:w-1/2 pt-14">
+        <div class="w-full lg:w-1/2 pt-14 ">
             <div class="max-w-md mx-auto lg:mx-0  bg-white lg:max-w-xs rounded border shadow">
                 <img class="w-1/2 mx-auto py-4" src="../images/okmen.png">
                 <div class="w-11/12 mx-auto">
-                    <form class="w-full text-center">
-                        <input class="border bg-gray-50 rounded w-11/12 mt-2 py-2 text-gray-600 text-xs pl-2 focus:outline-none focus:border-purple-500" type="text" placeholder="Số điện thoại, tên người dùng hoặc email">
-                        <input class="border bg-gray-50 rounded w-11/12 mt-2 py-2 text-gray-600 text-xs pl-2 focus:outline-none focus:border-purple-500" type="password" placeholder="Mật khẩu">
-                        <button class="border bg-blue-500 rounded w-11/12 mt-2 py-2 text-white text-xs hover:bg-blue-600">Đăng nhập</button>
+                    <form class="w-full text-center" @submit.prevent="handleLogin" method="POST">
+                        <input class="border bg-gray-50 rounded w-11/12 mt-2 py-2 text-gray-600 text-xs pl-2 focus:outline-none focus:border-purple-500" v-model="data.email" type="text" placeholder="Số điện thoại, tên người dùng hoặc email">
+                        <p class="text-red-400 text-xs float-left px-3 pt-1" v-if="showNotification.email">{{showNotification.email[0]}}</p>
+                        <input class="border bg-gray-50 rounded w-11/12 mt-2 py-2 text-gray-600 text-xs pl-2 focus:outline-none focus:border-purple-500" v-model="data.password" type="password" placeholder="Mật khẩu">
+                        <p class="text-red-400 text-xs float-left px-3 pt-1" v-if="showNotification.password">{{showNotification.password[0]}}</p>
+                        <button class="border bg-blue-500 rounded w-11/12 mt-2 py-2 text-white text-xs hover:bg-blue-600" type="submit">Đăng nhập</button>
                     </form>
                     <div class="w-11/12 mt-2 py-2  mx-auto text-xs flex flex-col justify-center">
                         <p class="text-center text-gray-300">━━━━━━━━━━━━━━━━ OR ━━━━━━━━━━━━━━━━</p>
@@ -45,16 +47,27 @@
     </div>
 </div>
 </template>
-
 <script>
+import { reactive,computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
     name: 'Login',
     setup() {
-        return {
-
+        const store = useStore();
+        const showNotification = computed(() => store.state.auth.notification_error);
+        const data = reactive({
+                email:'',
+                password:''
+        });
+        
+        const handleLogin = () =>{
+            store.dispatch("handleLogin", {
+                email: data.email,
+                password: data.password,
+            });
         }
+        return {store,data,handleLogin,showNotification}
     }
-
 }
 </script>
 

@@ -1,6 +1,8 @@
 import { createRouter,createWebHistory } from "vue-router";
-import Login from "./pages/Login";
-import Registraion from "./pages/Registration"
+import Login from "@/pages/Login";
+import Registraion from "@/pages/Registration";
+import auth from "@/middleware/auth";
+import Home from "@/pages/Home";
 const meta = {
     progress: {
       func: [
@@ -19,12 +21,21 @@ const routes=[
     {
         path:"/",
         component:Login,
+        name:'login',
         meta: meta
     },
     {
         path:"/registration",
         component:Registraion,
         meta: meta
+    },
+    {
+      path:"/home",
+      component:Home,
+      meta: {
+        middleware : auth,
+      }
+
     },
 ];
 
